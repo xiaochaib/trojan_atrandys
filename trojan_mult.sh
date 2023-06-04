@@ -78,8 +78,7 @@ EOF
             red "不存在/usr/src/trojan-cert/$your_domain目录"
             exit 1
         fi
-        curl https://get.acme.sh | sh
-        ~/.acme.sh/acme.sh  --register-account  -m test@$your_domain --server zerossl
+        curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh
         ~/.acme.sh/acme.sh  --issue  -d $your_domain  --nginx
         if test -s /root/.acme.sh/$your_domain/fullchain.cer; then
             cert_success="1"
@@ -90,8 +89,7 @@ EOF
         now_time=`date +%s`
         minus=$(($now_time - $create_time ))
         if [  $minus -gt 5184000 ]; then
-            curl https://get.acme.sh | sh
-            ~/.acme.sh/acme.sh  --register-account  -m test@$your_domain --server zerossl
+            curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh
             ~/.acme.sh/acme.sh  --issue  -d $your_domain  --nginx
             if test -s /root/.acme.sh/$your_domain/fullchain.cer; then
                 cert_success="1"
@@ -102,8 +100,7 @@ EOF
         fi        
     else 
         mkdir /usr/src/trojan-cert/$your_domain
-        curl https://get.acme.sh | sh
-        ~/.acme.sh/acme.sh  --register-account  -m test@$your_domain --server zerossl
+        curl https://raw.githubusercontent.com/acmesh-official/acme.sh/master/acme.sh | sh
         ~/.acme.sh/acme.sh  --issue  -d $your_domain  --nginx
         if test -s /root/.acme.sh/$your_domain/fullchain.cer; then
             cert_success="1"
@@ -430,7 +427,6 @@ function repair_cert(){
     real_addr=`ping ${your_domain} -c 1 | sed '1{s/[^(]*(//;s/).*//;q}'`
     local_addr=`curl ipv4.icanhazip.com`
     if [ $real_addr == $local_addr ] ; then
-        ~/.acme.sh/acme.sh  --register-account  -m test@$your_domain --server zerossl
         ~/.acme.sh/acme.sh  --issue  -d $your_domain  --standalone
         ~/.acme.sh/acme.sh  --installcert  -d  $your_domain   \
             --key-file   /usr/src/trojan-cert/$your_domain/private.key \
